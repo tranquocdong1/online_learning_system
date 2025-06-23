@@ -1,6 +1,7 @@
 const express = require("express");
 const dotenv = require("dotenv");
-const sequelize = require("./src/config/database");
+const { sequelize } = require("./src/models");
+const adminRoutes = require("./src/routes/adminRoutes");
 
 // Load environment variables
 dotenv.config();
@@ -10,16 +11,19 @@ const app = express();
 // Middleware to parse JSON
 app.use(express.json());
 
+// Routes
+app.use("/admin", adminRoutes);
+
 // Basic route
 app.get("/", (req, res) => {
   res.json({ message: "Welcome to the Online Learning System API" });
 });
 
-// Test database connection
+// Sync database
 sequelize
-  .authenticate()
-  .then(() => console.log("Database connected"))
-  .catch((err) => console.error("Database connection error:", err));
+  .sync({ force: false })
+  .then(() => console.log("Database synced"))
+  .catch((err) => console.error("Database sync error:", err));
 
 // Start server
 const PORT = process.env.PORT || 5000;
