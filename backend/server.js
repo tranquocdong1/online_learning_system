@@ -1,5 +1,6 @@
 const express = require("express");
 const dotenv = require("dotenv");
+const sequelize = require("./src/config/database");
 
 // Load environment variables
 dotenv.config();
@@ -13,6 +14,12 @@ app.use(express.json());
 app.get("/", (req, res) => {
   res.json({ message: "Welcome to the Online Learning System API" });
 });
+
+// Test database connection
+sequelize
+  .authenticate()
+  .then(() => console.log("Database connected"))
+  .catch((err) => console.error("Database connection error:", err));
 
 // Start server
 const PORT = process.env.PORT || 5000;
